@@ -23,6 +23,16 @@ function notify(game, type, extra) {
 function clearTimer(game) {
   if (game?._timer) { clearTimeout(game._timer); game._timer = null }
   if (game?._warnTimer) { clearTimeout(game._warnTimer); game._warnTimer = null }
+  if (game?._cleanupTimer) { clearTimeout(game._cleanupTimer); game._cleanupTimer = null }
+}
+
+function scheduleEndedCleanup(game) {
+  if (game?._cleanupTimer) clearTimeout(game._cleanupTimer)
+  game._cleanupTimer = setTimeout(() => {
+    if (game.state === STATE.ENDED) {
+      delete games[game.groupId]
+    }
+  }, 300000)
 }
 
 function getWarnBefore() {
@@ -134,10 +144,10 @@ function compareHands(handA, handB) {
 
 function getMultiplier(handResult) {
   switch (handResult.type) {
-    case 'wuxiao':
-    case 'bomb':
-    case 'wuhua': return 3
-    case 'niuniu': return 2
+    case 'wuxiao': return 5
+    case 'bomb': return 4
+    case 'wuhua': return 4
+    case 'niuniu': return 3
     case 'youNiu':
       return handResult.points >= 7 ? 2 : 1
     default: return 1
@@ -371,6 +381,7 @@ function settle(game) {
   }
 
   game.state = STATE.ENDED
+  scheduleEndedCleanup(game)
   game.messages.push({ type: 'system', content: '本轮结束，发送 #再来一局 继续游戏' })
   return { ok: true, game }
 }
@@ -380,6 +391,8 @@ export function newRound(groupId) {
   if (!game) return { error: '本群没有进行中的游戏' }
   if (game.state !== STATE.ENDED) return { error: '当前轮次未结束' }
   if (!game.players.length) return { error: '没有玩家剩余，请重新 #斗牛' }
+
+  clearTimer(game)
 
   for (const p of game.players) {
     p.hand = []

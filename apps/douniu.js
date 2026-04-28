@@ -64,6 +64,7 @@ export class Douniu extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game) return false
+    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #再来一局', true)
     const m = e.msg.match(/\d+/)
     const amount = m ? Number(m[0]) : 0
     if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #下注 50', true)
@@ -77,6 +78,7 @@ export class Douniu extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game) return false
+    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #再来一局', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), game.config.defaultBet)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -104,7 +106,7 @@ export class Douniu extends plugin {
   async newRound(e) {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
-    if (!game) return false
+    if (!game || game.state !== Game.STATE.ENDED) return false
     const r = Game.newRound(e.group_id)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -148,10 +150,9 @@ Game.setExternalTick(async (game, type, extra) => {
     if (type === 'turn-warn') {
       const notBet = game.players.filter(p => p.currentBet === 0)
       if (notBet.length) {
-        await g.sendMsg([
-          `${notBet.map(p => segment.at(p.userId)).join(' ')}`,
-          ` 还有 ${extra?.secondsLeft ?? 15} 秒下注，超时将自动使用默认下注`,
-        ].join(''))
+        const parts = notBet.flatMap(p => [segment.at(p.userId), ' '])
+        parts.push(`还有 ${extra?.secondsLeft ?? 15} 秒下注，超时将自动使用默认下注`)
+        await g.sendMsg(parts)
       }
       return
     }

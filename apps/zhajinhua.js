@@ -171,7 +171,7 @@ export class Zhajinhua extends plugin {
   async newRound(e) {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
-    if (!game) return false
+    if (!game || game.state !== Game.STATE.ENDED) return false
     const r = Game.newRound(e.group_id)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -219,7 +219,7 @@ Game.setExternalTick(async (game, type, extra) => {
         await g.sendMsg([
           segment.at(current.userId),
           ` 还有 ${extra?.secondsLeft ?? 15} 秒操作，超时将自动弃牌`,
-        ].join(''))
+        ])
       }
       return
     }

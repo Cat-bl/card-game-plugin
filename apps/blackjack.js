@@ -67,7 +67,7 @@ export class Blackjack extends plugin {
   async bet(e) {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
-    if (!game) return false
+    if (!game || game.state !== Game.STATE.BETTING) return false
     const m = e.msg.match(/\d+/)
     const amount = m ? Number(m[0]) : 0
     if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #下注 50', true)
@@ -80,7 +80,7 @@ export class Blackjack extends plugin {
   async defaultBet(e) {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
-    if (!game) return false
+    if (!game || game.state !== Game.STATE.BETTING) return false
     const r = Game.placeBet(e.group_id, String(e.user_id), game.config.defaultBet)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -155,7 +155,7 @@ export class Blackjack extends plugin {
   async newRound(e) {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
-    if (!game) return false
+    if (!game || game.state !== Game.STATE.ENDED) return false
     const r = Game.newRound(e.group_id)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)

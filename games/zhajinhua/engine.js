@@ -22,6 +22,16 @@ function notify(game, type, extra) {
 function clearTimer(game) {
   if (game?._timer) { clearTimeout(game._timer); game._timer = null }
   if (game?._warnTimer) { clearTimeout(game._warnTimer); game._warnTimer = null }
+  if (game?._cleanupTimer) { clearTimeout(game._cleanupTimer); game._cleanupTimer = null }
+}
+
+function scheduleEndedCleanup(game) {
+  if (game?._cleanupTimer) clearTimeout(game._cleanupTimer)
+  game._cleanupTimer = setTimeout(() => {
+    if (game.state === STATE.ENDED) {
+      delete games[game.groupId]
+    }
+  }, 300000)
 }
 
 function getWarnBefore() {
@@ -563,6 +573,7 @@ function showdown(game) {
   }
 
   game.state = STATE.ENDED
+  scheduleEndedCleanup(game)
   game.messages.push({ type: 'system', content: '本轮结束，发送 #再来一局 继续游戏' })
   return { ok: true, game }
 }
