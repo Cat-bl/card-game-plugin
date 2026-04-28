@@ -1,0 +1,49 @@
+# 卡牌游戏插件配置
+# 修改本文件会热更新，无需重启
+
+# 21点
+blackjack:
+  minPlayers: 1
+  maxPlayers: 6
+  waitTimeout: 300
+  turnTimeout: 60
+  warnBefore: 15
+  deckCount: 1
+  startingChips: 1000
+  defaultBet: 50
+  minBet: 10
+  maxBet: 500
+  blackjackPayout: 1.5
+  dealerStandOn: 17
+  enableDoubleDown: true
+  enableInsurance: true
+  maxMessages: 40
+
+# 斗牛
+douniu:
+  minPlayers: 1
+  maxPlayers: 6
+  waitTimeout: 300
+  betTimeout: 60
+  warnBefore: 15
+  deckCount: 1
+  startingChips: 1000
+  defaultBet: 50
+  minBet: 10
+  maxBet: 500
+  maxMessages: 40
+
+# 炸金花
+zhajinhua:
+  minPlayers: 2
+  maxPlayers: 8
+  waitTimeout: 300
+  turnTimeout: 60
+  warnBefore: 15
+  deckCount: 1
+  startingChips: 1000
+  ante: 10
+  blindStake: 10
+  seenStake: 20
+  maxRounds: 20
+  maxMessages: 40

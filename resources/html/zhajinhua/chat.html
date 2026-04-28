@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        width: 660px;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(180deg, #5c3d0e 0%, #3e2200 40%);
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        width: 660px;
+        background: linear-gradient(180deg, #5c3d0e 0%, #7a5200 30%, #5c3d0e 100%);
+        padding-bottom: 10px;
+        min-height: 400px;
+      }
+      .header {
+        padding: 16px 18px 12px 18px;
+        text-align: center;
+      }
+      .header-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f5d742;
+        text-align: center;
+        margin-bottom: 4px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      }
+      .header-title .round {
+        color: #d4a017;
+        margin-left: 8px;
+        font-weight: 400;
+        font-size: 15px;
+      }
+
+      .info-bar {
+        margin: 0 18px 10px 18px;
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+      }
+      .info-item {
+        background: rgba(0,0,0,0.25);
+        border-radius: 8px;
+        padding: 8px 16px;
+        text-align: center;
+        min-width: 100px;
+      }
+      .info-item .label {
+        font-size: 11px;
+        color: #c0a050;
+      }
+      .info-item .value {
+        font-size: 16px;
+        color: #f5d742;
+        font-weight: 700;
+      }
+
+      .players-section {
+        margin: 0 18px 14px 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+      .player-slot {
+        background: rgba(0,0,0,0.25);
+        border-radius: 12px;
+        padding: 10px 14px;
+        min-width: 180px;
+        max-width: 320px;
+        position: relative;
+      }
+      .player-slot.current {
+        border: 2px solid #f5d742;
+        box-shadow: 0 0 12px rgba(245,215,66,0.3);
+      }
+      .player-slot.folded {
+        opacity: 0.45;
+      }
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .player-info img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #ddd;
+      }
+      .player-name {
+        font-size: 14px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .player-badge {
+        font-size: 11px;
+        margin-left: auto;
+        padding: 1px 8px;
+        border-radius: 6px;
+      }
+      .player-badge.blind { background: rgba(127,140,141,0.3); color: #bdc3c7; }
+      .player-badge.seen { background: rgba(241,196,15,0.3); color: #f1c40f; }
+      .player-badge.folded { background: rgba(231,76,60,0.3); color: #e74c3c; }
+      .player-hand-name {
+        font-size: 11px;
+        margin-left: 4px;
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+      .player-hand-name.win { background: rgba(39,174,96,0.3); color: #2ecc71; }
+      .player-hand-name.lose { background: rgba(231,76,60,0.3); color: #e74c3c; }
+
+      .player-cards {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+      }
+      .card {
+        width: 56px;
+        height: 82px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
+        font-family: "Georgia", "Times New Roman", serif;
+        flex-shrink: 0;
+      }
+      .card.red { color: #d32f2f; }
+      .card.black { color: #1a1a1a; }
+      .card .rank-top {
+        position: absolute;
+        top: 4px; left: 6px;
+        font-size: 14px; font-weight: 700; line-height: 1;
+      }
+      .card .suit-top {
+        position: absolute;
+        top: 19px; left: 6px;
+        font-size: 11px; line-height: 1;
+      }
+      .card .suit-center {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 22px;
+      }
+      .card .rank-bottom {
+        position: absolute;
+        bottom: 4px; right: 6px;
+        font-size: 14px; font-weight: 700; line-height: 1;
+        transform: rotate(180deg);
+      }
+      .card .suit-bottom {
+        position: absolute;
+        bottom: 19px; right: 6px;
+        font-size: 11px; line-height: 1;
+        transform: rotate(180deg);
+      }
+      .card.back {
+        background: #2c5282;
+        background-image:
+          repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px),
+          repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px);
+        border: 3px solid #fff;
+      }
+      .card.back .inner {
+        position: absolute;
+        top: 4px; left: 4px; right: 4px; bottom: 4px;
+        border: 1.5px solid rgba(255,255,255,0.5);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: rgba(255,255,255,0.6);
+      }
+
+      .chat {
+        padding: 12px 18px;
+        background: rgba(0,0,0,0.15);
+        margin: 0 18px;
+        border-radius: 10px;
+        min-height: 60px;
+      }
+      .msg {
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #e8d5a0;
+        line-height: 1.5;
+      }
+      .msg.system {
+        text-align: center;
+        color: #c0a050;
+      }
+      .msg .yellow { color: #f5d742; }
+      .msg .red { color: #e74c3c; }
+      .msg .green { color: #2ecc71; }
+      .msg .grey { color: #bdc3c7; }
+      .msg.cards-row {
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 4px 0;
+      }
+      .msg .mini-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        background: #fff;
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .msg .mini-card.red { color: #d32f2f; }
+      .msg .mini-card.black { color: #1a1a1a; }
+      .msg.result { text-align: center; padding: 3px 0; }
+      .msg.result .tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .msg.result .tag.win { background: rgba(39,174,96,0.3); color: #2ecc71; }
+      .msg.result .tag.lose { background: rgba(231,76,60,0.3); color: #e74c3c; }
+
+      .status-bar {
+        margin: 10px 18px 0 18px;
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.25);
+        border-radius: 10px;
+        font-size: 13px;
+        color: #d4a017;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.08);
+        line-height: 1.5;
+      }
+      .footer {
+        text-align: center;
+        color: rgba(255,255,255,0.25);
+        font-size: 10px;
+        padding: 8px;
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="app">
+      <div class="header">
+        <div class="header-title">
+          炸金花 · Zha Jinhua
+          {{if _data.stateLabel}}
+          <span class="round">· {{_data.stateLabel}}</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Info bar: pot & stake -->
+      {{if _data.pot > 0 || _data.currentStake > 0}}
+      <div class="info-bar">
+        <div class="info-item">
+          <div class="label">底池</div>
+          <div class="value">{{_data.pot}}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">当前注</div>
+          <div class="value">{{_data.currentStake}}</div>
+        </div>
+      </div>
+      {{/if}}
+
+      <!-- Players -->
+      {{if _data.players.length}}
+      <div class="players-section">
+        {{each _data.players p}}
+        <div class="player-slot {{p.isCurrent ? 'current' : ''}} {{p.folded ? 'folded' : ''}}">
+          <div class="player-info">
+            <img src="{{p.avatar}}" />
+            <span class="player-name">{{p.nickname}}</span>
+            {{if p.folded}}
+            <span class="player-badge folded">已弃牌</span>
+            {{else if p.seen}}
+            <span class="player-badge seen">明注</span>
+            {{else if !_data.ended}}
+            <span class="player-badge blind">盲注</span>
+            {{/if}}
+            {{if p.handName}}
+            <span class="player-hand-name {{p.handName === '已弃牌' ? 'lose' : 'win'}}">{{p.handName}}</span>
+            {{/if}}
+          </div>
+          {{if p.cards.length}}
+          <div class="player-cards">
+            {{each p.cards card}}
+              {{if card.hidden}}
+              <div class="card back"><div class="inner">🂠</div></div>
+              {{else}}
+              <div class="card {{card.color}}">
+                <div class="rank-top">{{card.rank}}</div>
+                <div class="suit-top">{{card.symbol}}</div>
+                <div class="suit-center">{{card.symbol}}</div>
+                <div class="rank-bottom">{{card.rank}}</div>
+                <div class="suit-bottom">{{card.symbol}}</div>
+              </div>
+              {{/if}}
+            {{/each}}
+          </div>
+          {{/if}}
+          <div style="font-size:11px;color:#c0a050;margin-top:4px;">筹码: {{p.chips}}</div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      <!-- Chat -->
+      {{if _data.messages.length || _data.truncated}}
+      <div class="chat">
+        {{if _data.truncated}}
+        <div class="msg system">已省略前 {{_data.omittedCount}} 条消息...</div>
+        {{/if}}
+        {{each _data.messages m}}
+          {{if m.type === 'system'}}
+          <div class="msg system">{{m.content}}</div>
+          {{else if m.type === 'call'}}
+          <div class="msg">{{m.nickname}} <span class="yellow">跟注 {{m.amount}}</span>（{{m.blind ? '盲注' : '明注'}}）</div>
+          {{else if m.type === 'raise'}}
+          <div class="msg">{{m.nickname}} <span class="yellow">加注到 {{m.amount}}</span>（{{m.blind ? '盲注' : '明注'}}）</div>
+          {{else if m.type === 'fold'}}
+          <div class="msg"><span class="red">{{m.nickname}} 弃牌</span></div>
+          {{else if m.type === 'compare'}}
+          <div class="msg system">
+            ⚔ {{m.challenger}}（{{m.challengerName}}）VS {{m.target}}（{{m.targetName}}）
+            → <span class="red">{{m.loser}}</span> 落败出局
+          </div>
+          {{else if m.type === 'result'}}
+          <div class="msg result">
+            <span class="tag {{m.result}}">{{m.nickname}} {{m.detail}}</span>
+          </div>
+          {{if m.allHands}}
+          <div class="msg system" style="margin-top:4px;">
+            {{each m.allHands h}}
+            <div style="margin-bottom:2px;">{{h.nickname}}：{{h.handName}}</div>
+            {{/each}}
+          </div>
+          {{/if}}
+          {{/if}}
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{if _data.statusText}}
+      <div class="status-bar">{{@ _data.statusText}}</div>
+      {{/if}}
+
+      <div class="footer">Trss-Yunzai · card-game-plugin · 冰凉到通透</div>
+    </div>
+  </body>
+</html>

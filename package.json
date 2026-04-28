@@ -1,0 +1,24 @@
+{
+  "name": "card-game-plugin",
+  "version": "1.0.0",
+  "description": "统一卡牌游戏插件 - 21点、斗牛、炸金花",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cat-bl/card-game-plugin"
+  },
+  "keywords": [
+    "Yunzai-Bot",
+    "Miao-Yunzai",
+    "Trss-Yunzai",
+    "card-game-plugin",
+    "blackjack",
+    "21点",
+    "斗牛",
+    "炸金花"
+  ],
+  "author": "",
+  "license": "MIT"
+}

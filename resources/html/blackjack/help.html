@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        width: 680px;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(180deg, #1a5c2a 0%, #0d3316 40%);
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { padding: 26px 20px 16px 20px; }
+      .title {
+        text-align: center;
+        font-size: 34px;
+        font-weight: 800;
+        color: #f5d742;
+        margin-bottom: 4px;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 13px;
+        color: #90b890;
+        margin-bottom: 18px;
+      }
+      .card {
+        background: rgba(255,255,255,0.95);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      }
+      .card h2 {
+        font-size: 16px;
+        color: #1a5c2a;
+        padding-left: 10px;
+        border-left: 4px solid #f5d742;
+        margin-bottom: 12px;
+        line-height: 1;
+      }
+      .rules {
+        font-size: 14px;
+        color: #333;
+        line-height: 1.8;
+      }
+      .rules ol { padding-left: 22px; }
+      .rules code {
+        background: #f3f4f6;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        color: #c41e3a;
+      }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th {
+        background: #1a5c2a;
+        color: #f5d742;
+        text-align: left;
+        padding: 8px 10px;
+        font-weight: 600;
+      }
+      td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+        vertical-align: top;
+      }
+      tr:last-child td { border-bottom: none; }
+      td.cmd {
+        color: #c41e3a;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+        white-space: nowrap;
+        width: 180px;
+      }
+      td.role { width: 96px; color: #888; font-size: 12px; }
+      .win-box {
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .win-box b { display: block; font-size: 13px; margin-bottom: 3px; }
+      .tip {
+        background: #fff3cd;
+        border-left: 3px solid #ffc107;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #856404;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .footer {
+        text-align: center;
+        font-size: 11px;
+        color: rgba(255,255,255,0.3);
+        padding: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="wrap">
+      <div class="title">21点</div>
+      <div class="subtitle">blackjack-plugin · 经典扑克牌游戏</div>
+
+      <div class="card">
+        <h2>游戏规则</h2>
+        <div class="rules">
+          <ol>
+            <li>每位玩家与<strong>庄家（机器人）</strong>对局，目标是让手牌点数<strong>尽量接近 21</strong>但不爆牌</li>
+            <li>点数计算：2~10 按面值，J/Q/K = 10，A = 1 或 11</li>
+            <li>开局每人发2张明牌，庄家1明1暗</li>
+            <li>叫牌 <code>#叫牌</code>：摸一张牌，可一直叫到停牌或爆掉</li>
+            <li>停牌 <code>#停牌</code>：表示不叫了</li>
+            <li>双倍 <code>#双倍</code>：加倍下注并只摸一张牌（仅首次操作可用）</li>
+            <li>保险 <code>#保险</code>：庄家明牌为 A 时，可下保险注（半注，赔 2:1）</li>
+            <li>所有玩家操作完后庄家亮暗牌，不足 17 点必叫牌，≥17 必停</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>胜负判定</h2>
+        <div class="win-box">
+          <b>黑杰克（A+10/J/Q/K）赔 3:2</b>
+          庄家爆牌 → 所有没爆的玩家胜 · 点数大于庄家则胜 · 点数相同平局退注
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>指令一览</h2>
+        <table>
+          <tr><th>指令</th><th>说明</th><th>角色</th></tr>
+          <tr><td class="cmd">#21点</td><td>发起一局新游戏</td><td class="role">任意玩家</td></tr>
+          <tr><td class="cmd">#加入21点</td><td>加入已发起的游戏</td><td class="role">任意玩家</td></tr>
+          <tr><td class="cmd">#退出21点</td><td>等待阶段退出游戏</td><td class="role">已加入</td></tr>
+          <tr><td class="cmd">#开始21点</td><td>开始游戏，进入下注阶段</td><td class="role">发起人</td></tr>
+          <tr><td class="cmd">#下注 N</td><td>下注 N 筹码</td><td class="role">未下注玩家</td></tr>
+          <tr><td class="cmd">#默认下注</td><td>使用默认赌注（50）</td><td class="role">未下注玩家</td></tr>
+          <tr><td class="cmd">#叫牌</td><td>再摸一张牌</td><td class="role">当前玩家</td></tr>
+          <tr><td class="cmd">#停牌</td><td>不再摸牌，轮到下一人</td><td class="role">当前玩家</td></tr>
+          <tr><td class="cmd">#双倍</td><td>加倍下注，摸一张牌后自动停</td><td class="role">当前玩家</td></tr>
+          <tr><td class="cmd">#保险</td><td>庄家明牌为A时购买保险</td><td class="role">当前玩家</td></tr>
+          <tr><td class="cmd">#21点状态</td><td>查看当前游戏状态图</td><td class="role">任意玩家</td></tr>
+          <tr><td class="cmd">#21点结束</td><td>强制结束当前游戏</td><td class="role">发起人/主人</td></tr>
+          <tr><td class="cmd">#再来一局</td><td>继续下一轮（结算后）</td><td class="role">任意玩家</td></tr>
+          <tr><td class="cmd">#21点帮助</td><td>查看本帮助</td><td class="role">任意玩家</td></tr>
+        </table>
+        <div class="tip">
+          提示：每局初始 1000 筹码，筹码输光自动退桌。赌注范围 10~500，量力而行！
+        </div>
+      </div>
+
+      <div class="footer">Trss-Yunzai · 21点 · 冰凉到通透</div>
+    </div>
+  </body>
+</html>

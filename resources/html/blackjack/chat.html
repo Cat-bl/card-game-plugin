@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        width: 650px;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: #1a5c2a;
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        width: 650px;
+        background: linear-gradient(180deg, #1a5c2a 0%, #1e6b30 30%, #1a5c2a 100%);
+        padding-bottom: 10px;
+        min-height: 400px;
+      }
+      .header {
+        padding: 16px 18px 12px 18px;
+        text-align: center;
+      }
+      .header-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f5d742;
+        text-align: center;
+        margin-bottom: 4px;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      }
+      .header-title .round {
+        color: #e0c030;
+        margin-left: 8px;
+        font-weight: 400;
+        font-size: 15px;
+      }
+      /* Dealer */
+      .dealer-section {
+        margin: 0 18px 14px 18px;
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 12px;
+        text-align: center;
+      }
+      .dealer-label {
+        font-size: 13px;
+        color: #a0d0a8;
+        margin-bottom: 8px;
+      }
+      .dealer-label .value {
+        color: #f5d742;
+        font-weight: 600;
+        margin-left: 6px;
+      }
+      .dealer-label .bj {
+        background: #f5d742;
+        color: #1a5c2a;
+        padding: 1px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        margin-left: 6px;
+      }
+      .dealer-label .bust {
+        background: #e74c3c;
+        color: #fff;
+        padding: 1px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        margin-left: 6px;
+      }
+      .cards-row {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      /* Playing Card */
+      .card {
+        width: 70px;
+        height: 102px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
+        font-family: "Georgia", "Times New Roman", serif;
+        flex-shrink: 0;
+      }
+      .card.red { color: #d32f2f; }
+      .card.black { color: #1a1a1a; }
+      .card .rank-top {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .card .suit-top {
+        position: absolute;
+        top: 22px;
+        left: 8px;
+        font-size: 13px;
+        line-height: 1;
+      }
+      .card .suit-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 28px;
+      }
+      .card .rank-bottom {
+        position: absolute;
+        bottom: 6px;
+        right: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+        transform: rotate(180deg);
+      }
+      .card .suit-bottom {
+        position: absolute;
+        bottom: 22px;
+        right: 8px;
+        font-size: 13px;
+        line-height: 1;
+        transform: rotate(180deg);
+      }
+      /* Card Back */
+      .card.back {
+        background: #2c5282;
+        background-image:
+          repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px),
+          repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px);
+        border: 3px solid #fff;
+      }
+      .card.back .inner {
+        position: absolute;
+        top: 4px; left: 4px; right: 4px; bottom: 4px;
+        border: 1.5px solid rgba(255,255,255,0.5);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: rgba(255,255,255,0.6);
+      }
+      /* Players */
+      .players-section {
+        margin: 0 18px 14px 18px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+      .player-slot {
+        background: rgba(0,0,0,0.25);
+        border-radius: 12px;
+        padding: 10px 14px;
+        min-width: 180px;
+        max-width: 320px;
+      }
+      .player-slot.current {
+        background: rgba(245,215,66,0.15);
+        border: 1.5px solid rgba(245,215,66,0.4);
+      }
+      .player-slot.bust {
+        opacity: 0.55;
+      }
+      .player-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .player-info img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #ddd;
+      }
+      .player-name {
+        font-size: 14px;
+        color: #fff;
+        font-weight: 500;
+      }
+      .player-bet {
+        font-size: 11px;
+        color: #f5d742;
+        margin-left: auto;
+      }
+      .player-value {
+        font-size: 11px;
+        color: #90d0a0;
+        margin-left: 4px;
+      }
+      .player-status {
+        font-size: 11px;
+        margin-left: 4px;
+        padding: 1px 6px;
+        border-radius: 6px;
+      }
+      .player-status.bj {
+        background: #f5d742;
+        color: #1a5c2a;
+      }
+      .player-status.bust {
+        background: #e74c3c;
+        color: #fff;
+      }
+      .player-status.win {
+        background: #27ae60;
+        color: #fff;
+      }
+      .player-status.lose {
+        background: #e74c3c;
+        color: #fff;
+      }
+      .player-status.push {
+        background: #7f8c8d;
+        color: #fff;
+      }
+      .player-cards {
+        display: flex;
+        gap: 6px;
+      }
+      .player-cards .card {
+        width: 52px;
+        height: 76px;
+      }
+      .player-cards .card .rank-top { font-size: 13px; top: 4px; left: 5px; }
+      .player-cards .card .suit-top { font-size: 10px; top: 18px; left: 5px; }
+      .player-cards .card .suit-center { font-size: 20px; }
+      .player-cards .card .rank-bottom { font-size: 13px; bottom: 4px; right: 5px; }
+      .player-cards .card .suit-bottom { font-size: 10px; bottom: 18px; right: 5px; }
+      /* Chat */
+      .chat {
+        padding: 12px 18px;
+        background: rgba(0,0,0,0.15);
+        margin: 0 18px;
+        border-radius: 10px;
+        min-height: 60px;
+      }
+      .msg {
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #d0e0d0;
+        line-height: 1.5;
+      }
+      .msg.system {
+        text-align: center;
+        color: #a0d0a8;
+      }
+      .msg.hit, .msg.stand, .msg.double {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .msg .mini-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        background: #fff;
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .msg .mini-card.red { color: #d32f2f; }
+      .msg .mini-card.black { color: #1a1a1a; }
+      .msg.result {
+        text-align: center;
+        padding: 3px 0;
+      }
+      .msg.result .tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .msg.result .tag.win { background: rgba(39,174,96,0.3); color: #2ecc71; }
+      .msg.result .tag.lose { background: rgba(231,76,60,0.3); color: #e74c3c; }
+      .msg.result .tag.push { background: rgba(127,140,141,0.3); color: #bdc3c7; }
+      .msg.result .tag.blackjack { background: rgba(245,215,66,0.3); color: #f5d742; }
+      /* Status Bar */
+      .status-bar {
+        margin: 10px 18px 0 18px;
+        padding: 10px 14px;
+        background: rgba(0,0,0,0.25);
+        border-radius: 10px;
+        font-size: 13px;
+        color: #b0d0b0;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.08);
+        line-height: 1.5;
+      }
+      .status-bar .highlight {
+        color: #f5d742;
+        font-weight: 600;
+      }
+      .footer {
+        text-align: center;
+        color: rgba(255,255,255,0.25);
+        font-size: 10px;
+        padding: 8px;
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="app">
+      <div class="header">
+        <div class="header-title">
+          21点 · Blackjack
+          {{if _data.stateLabel}}
+          <span class="round">· {{_data.stateLabel}}</span>
+          {{/if}}
+        </div>
+      </div>
+
+      <!-- Dealer -->
+      <div class="dealer-section">
+        <div class="dealer-label">
+          庄家
+          {{if _data.dealer.handValue > 0}}
+          <span class="value">{{_data.dealer.handValue}}点</span>
+          {{/if}}
+          {{if _data.dealer.isBlackjack}}<span class="bj">Blackjack</span>{{/if}}
+          {{if _data.dealer.isBust}}<span class="bust">爆牌</span>{{/if}}
+        </div>
+        <div class="cards-row">
+          {{each _data.dealer.cards c}}
+            {{if c.hidden}}
+            <div class="card back"><div class="inner">🂠</div></div>
+            {{else}}
+            <div class="card {{c.color}}">
+              <div class="rank-top">{{c.rank}}</div>
+              <div class="suit-top">{{c.symbol}}</div>
+              <div class="suit-center">{{c.symbol}}</div>
+              <div class="rank-bottom">{{c.rank}}</div>
+              <div class="suit-bottom">{{c.symbol}}</div>
+            </div>
+            {{/if}}
+          {{/each}}
+        </div>
+      </div>
+
+      <!-- Players -->
+      {{if _data.players.length}}
+      <div class="players-section">
+        {{each _data.players p}}
+        <div class="player-slot {{p.isCurrent ? 'current' : ''}} {{p.isBust ? 'bust' : ''}}">
+          <div class="player-info">
+            <img src="{{p.avatar}}" />
+            <span class="player-name">{{p.nickname}}</span>
+            {{if p.currentBet > 0}}<span class="player-bet">下注 {{p.currentBet}}</span>{{/if}}
+            {{if p.handValue > 0 && p.status !== 'waiting'}}<span class="player-value">{{p.handValue}}点</span>{{/if}}
+            {{if p.isBlackjack}}<span class="player-status bj">BJ</span>{{/if}}
+            {{if p.isBust && p.status !== 'bust'}}<span class="player-status bust">BUST</span>{{/if}}
+            {{if p.status === 'win'}}<span class="player-status win">WIN</span>{{/if}}
+            {{if p.status === 'lose'}}<span class="player-status lose">LOSE</span>{{/if}}
+            {{if p.status === 'push'}}<span class="player-status push">PUSH</span>{{/if}}
+          </div>
+          {{if p.cards.length}}
+          <div class="player-cards">
+            {{each p.cards card}}
+            <div class="card {{card.color}}">
+              <div class="rank-top">{{card.rank}}</div>
+              <div class="suit-top">{{card.symbol}}</div>
+              <div class="suit-center">{{card.symbol}}</div>
+              <div class="rank-bottom">{{card.rank}}</div>
+              <div class="suit-bottom">{{card.symbol}}</div>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+          <div style="font-size:11px;color:#7db87d;margin-top:4px;">筹码: {{p.chips}}</div>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      <!-- Chat -->
+      {{if _data.messages.length || _data.truncated}}
+      <div class="chat">
+        {{if _data.truncated}}
+        <div class="msg system">已省略前 {{_data.omittedCount}} 条消息...</div>
+        {{/if}}
+        {{each _data.messages m}}
+          {{if m.type === 'system'}}
+          <div class="msg system">{{m.content}}</div>
+          {{else if m.type === 'bet'}}
+          <div class="msg hit">{{m.nickname}} 下注 <span style="color:#f5d742;">{{m.amount}}</span> 筹码</div>
+          {{else if m.type === 'hit'}}
+          <div class="msg hit">
+            {{m.nickname}} 叫牌 →
+            <span class="mini-card {{m.card.color}}">{{m.card.symbol}} {{m.card.rank}}</span>
+            {{if m.bust}}<span style="color:#e74c3c;">爆牌！</span>{{/if}}
+          </div>
+          {{else if m.type === 'stand'}}
+          <div class="msg stand">{{m.nickname}} 停牌 · 共 <span style="color:#f5d742;">{{m.total}}</span> 点</div>
+          {{else if m.type === 'double'}}
+          <div class="msg double">
+            {{m.nickname}} 双倍下注 {{m.bet}} →
+            <span class="mini-card {{m.card.color}}">{{m.card.symbol}} {{m.card.rank}}</span>
+            {{if m.bust}}<span style="color:#e74c3c;">爆牌！</span>{{/if}}
+          </div>
+          {{else if m.type === 'insurance'}}
+          <div class="msg system">{{m.nickname}} 购买保险，支付 <span style="color:#f5d742;">{{m.amount}}</span> 筹码</div>
+          {{else if m.type === 'dealer'}}
+          <div class="msg hit">
+            庄家摸牌 →
+            <span class="mini-card {{m.card.color}}">{{m.card.symbol}} {{m.card.rank}}</span>
+            = {{m.total}}点
+            {{if m.bust}}<span style="color:#e74c3c;">爆牌！</span>{{/if}}
+          </div>
+          {{else if m.type === 'result'}}
+          <div class="msg result">
+            {{if m.result === 'win'}}<span class="tag win">{{m.nickname}} 胜！{{m.detail}}</span>
+            {{else if m.result === 'lose'}}<span class="tag lose">{{m.nickname}} 负 · {{m.detail}}</span>
+            {{else if m.result === 'push'}}<span class="tag push">{{m.nickname}} 平局 · {{m.detail}}</span>
+            {{else if m.result === 'blackjack'}}<span class="tag blackjack">{{m.nickname}} Blackjack！{{m.detail}}</span>
+            {{else if m.result === 'insurance'}}<span class="tag win">{{m.nickname}} 保险赔付 · {{m.detail}}</span>
+            {{/if}}
+          </div>
+          {{/if}}
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{if _data.statusText}}
+      <div class="status-bar">
+        {{@ _data.statusText}}
+      </div>
+      {{/if}}
+
+      <div class="footer">Trss-Yunzai · 21点 · 冰凉到通透</div>
+    </div>
+  </body>
+</html>
