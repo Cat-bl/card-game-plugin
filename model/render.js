@@ -10,9 +10,12 @@ export function screenshot(gameType, saveId, data) {
 }
 
 export function helpScreenshot(gameType) {
+  const tplFile = gameType
+    ? `./plugins/card-game-plugin/resources/html/${gameType}/help.html`
+    : `./plugins/card-game-plugin/resources/html/help.html`
   return puppeteer.screenshot('card-game-plugin', {
-    saveId: `${gameType}-help`,
+    saveId: `${gameType || 'plugin'}-help`,
     imgType: 'png',
-    tplFile: `./plugins/card-game-plugin/resources/html/${gameType}/help.html`,
+    tplFile,
   })
 }

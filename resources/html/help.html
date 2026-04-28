@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        width: 680px;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { padding: 26px 20px 16px 20px; }
+      .title {
+        text-align: center;
+        font-size: 30px;
+        font-weight: 800;
+        color: #e0c030;
+        margin-bottom: 2px;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      }
+      .subtitle {
+        text-align: center;
+        font-size: 12px;
+        color: #7a8ba0;
+        margin-bottom: 20px;
+      }
+      .games {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .game-card {
+        flex: 1;
+        background: rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 16px 14px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+      .game-card .icon {
+        font-size: 36px;
+        margin-bottom: 8px;
+      }
+      .game-card h3 {
+        font-size: 18px;
+        color: #f5d742;
+        margin-bottom: 4px;
+      }
+      .game-card .en {
+        font-size: 11px;
+        color: #6a8a9a;
+        margin-bottom: 8px;
+      }
+      .game-card .desc {
+        font-size: 12px;
+        color: #a0b0c0;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        min-height: 36px;
+      }
+      .game-card .cmd {
+        display: inline-block;
+        background: rgba(245,215,66,0.15);
+        color: #f5d742;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-family: Consolas, monospace;
+      }
+      .section {
+        background: rgba(255,255,255,0.95);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+      }
+      .section h2 {
+        font-size: 15px;
+        color: #1a1a2e;
+        padding-left: 8px;
+        border-left: 3px solid #f5d742;
+        margin-bottom: 10px;
+        line-height: 1;
+      }
+      .section .row {
+        display: flex;
+        gap: 20px;
+        font-size: 13px;
+        color: #555;
+        line-height: 1.8;
+      }
+      .section .row > div { flex: 1; }
+      .section code {
+        background: #f0f0f0;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        color: #c41e3a;
+      }
+      .tip {
+        background: rgba(255,255,255,0.08);
+        border-left: 3px solid #f5d742;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #8a9ab0;
+        border-radius: 4px;
+      }
+      .footer {
+        text-align: center;
+        font-size: 10px;
+        color: rgba(255,255,255,0.2);
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="wrap">
+      <div class="title">卡牌游戏</div>
+      <div class="subtitle">card-game-plugin · 三款经典扑克牌游戏</div>
+
+      <div class="games">
+        <div class="game-card">
+          <div class="icon">🂡</div>
+          <h3>21 点</h3>
+          <div class="en">Blackjack</div>
+          <div class="desc">与庄家对局，尽可能接近<br>21 点而不超过</div>
+          <div class="cmd">#21点帮助</div>
+        </div>
+        <div class="game-card">
+          <div class="icon">🃅</div>
+          <h3>斗牛</h3>
+          <div class="en">Dou Niu</div>
+          <div class="desc">5 张牌凑牛，<br>与庄家比牌型大小</div>
+          <div class="cmd">#斗牛帮助</div>
+        </div>
+        <div class="game-card">
+          <div class="icon">🃏</div>
+          <h3>炸金花</h3>
+          <div class="en">Zha Jinhua</div>
+          <div class="desc">3 张牌玩家互比，<br>盲注明注心理博弈</div>
+          <div class="cmd">#炸金花帮助</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>快速开始</h2>
+        <div class="row">
+          <div>
+            <code>#21点</code> / <code>#斗牛</code> / <code>#炸金花</code> 发起游戏<br>
+            <code>#加入xx</code> 加入已有游戏<br>
+            <code>#开始xx</code> 发起人开始游戏
+          </div>
+          <div>
+            <code>#xx状态</code> 查看游戏状态<br>
+            <code>#xx结束</code> 强制结束一局<br>
+            <code>#xx帮助</code> 查看详细规则
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>通用指令</h2>
+        <div class="row">
+          <div>
+            <code>#卡牌帮助</code> 查看本帮助<br>
+            <code>#卡牌更新</code> 更新插件（主人）
+          </div>
+          <div>
+            <code>#再来一局</code> 结算后继续下一轮<br>
+            <code>#默认下注</code> 使用默认下注额
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        提示：三个游戏独立管理，同一群聊可同时进行不同类型的游戏，互不干扰。每位玩家初始 1000 筹码（可在配置中调整）。
+      </div>
+
+      <div class="footer">Trss-Yunzai · card-game-plugin · 冰凉到通透</div>
+    </div>
+  </body>
+</html>
