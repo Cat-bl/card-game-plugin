@@ -13,16 +13,11 @@
       .app {
         width: 650px;
         background:
-          /* 十字纹毡布 */
           repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 6px),
           repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 6px),
-          /* 四角暗角 */
           radial-gradient(ellipse 500px 350px at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 100%),
-          /* 顶部聚光灯 */
           radial-gradient(ellipse 600px 220px at 50% 0%, rgba(255,255,255,0.12) 0%, transparent 65%),
-          /* 中心暖光 */
           radial-gradient(ellipse 350px 260px at 50% 55%, rgba(255,255,200,0.08) 0%, transparent 70%),
-          /* 主渐变 */
           linear-gradient(175deg, #1f7332 0%, #1a5c2a 20%, #134a20 50%, #1a5c2a 80%, #0d3d16 100%);
         padding-bottom: 10px;
         min-height: 400px;
@@ -87,40 +82,62 @@
       }
       /* Playing Card */
       .card {
-        width: 52px;
-        height: 76px;
-        background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
-        border-radius: 6px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
-        flex-shrink: 0;
+        width: 70px;
+        height: 102px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
         font-family: "Georgia", "Times New Roman", serif;
+        flex-shrink: 0;
       }
-      .card.red { color: #c62828; }
+      .card.red { color: #d32f2f; }
       .card.black { color: #1a1a1a; }
-      .card .card-rank {
-        font-size: 22px;
+      .card .rank-top {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        font-size: 16px;
         font-weight: 700;
         line-height: 1;
       }
-      .card .card-suit {
-        font-size: 18px;
+      .card .suit-top {
+        position: absolute;
+        top: 22px;
+        left: 8px;
+        font-size: 13px;
         line-height: 1;
-        margin-top: 2px;
+      }
+      .card .suit-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 28px;
+      }
+      .card .rank-bottom {
+        position: absolute;
+        bottom: 6px;
+        right: 8px;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+        transform: rotate(180deg);
+      }
+      .card .suit-bottom {
+        position: absolute;
+        bottom: 22px;
+        right: 8px;
+        font-size: 13px;
+        line-height: 1;
+        transform: rotate(180deg);
       }
       /* Card Back */
       .card.back {
-        position: relative;
-        width: 52px;
-        height: 76px;
         background: #2c5282;
         background-image:
           repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px),
           repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px);
-        border-radius: 8px;
         border: 3px solid #fff;
       }
       .card.back .inner {
@@ -131,17 +148,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 30px;
+        font-size: 22px;
         color: rgba(255,255,255,0.6);
       }
-      .cards-row .card {
-        width: 66px;
-        height: 96px;
-      }
-      .cards-row .card .card-rank { font-size: 28px; }
-      .cards-row .card .card-suit { font-size: 22px; }
-      .cards-row .card.back { width: 66px; height: 96px; }
-      .cards-row .card.back .inner { font-size: 28px; }
       /* Players */
       .players-section {
         margin: 0 18px 14px 18px;
@@ -218,8 +227,19 @@
         background: #7f8c8d;
         color: #fff;
       }
-      .player-cards { display: flex; gap: 6px; }
-      .player-cards .card.back .inner { font-size: 20px; }
+      .player-cards {
+        display: flex;
+        gap: 6px;
+      }
+      .player-cards .card {
+        width: 52px;
+        height: 76px;
+      }
+      .player-cards .card .rank-top { font-size: 13px; top: 4px; left: 5px; }
+      .player-cards .card .suit-top { font-size: 10px; top: 18px; left: 5px; }
+      .player-cards .card .suit-center { font-size: 20px; }
+      .player-cards .card .rank-bottom { font-size: 13px; bottom: 4px; right: 5px; }
+      .player-cards .card .suit-bottom { font-size: 10px; bottom: 18px; right: 5px; }
       /* Chat */
       .chat {
         padding: 12px 18px;
@@ -320,7 +340,13 @@
             {{if c.hidden}}
             <div class="card back"><div class="inner">🂠</div></div>
             {{else}}
-            <div class="card {{c.color}}"><span class="card-rank">{{c.rank}}</span><span class="card-suit">{{c.symbol}}</span></div>
+            <div class="card {{c.color}}">
+              <div class="rank-top">{{c.rank}}</div>
+              <div class="suit-top">{{c.symbol}}</div>
+              <div class="suit-center">{{c.symbol}}</div>
+              <div class="rank-bottom">{{c.rank}}</div>
+              <div class="suit-bottom">{{c.symbol}}</div>
+            </div>
             {{/if}}
           {{/each}}
         </div>
@@ -345,7 +371,13 @@
           {{if p.cards.length}}
           <div class="player-cards">
             {{each p.cards card}}
-            <div class="card {{card.color}}"><span class="card-rank">{{card.rank}}</span><span class="card-suit">{{card.symbol}}</span></div>
+            <div class="card {{card.color}}">
+              <div class="rank-top">{{card.rank}}</div>
+              <div class="suit-top">{{card.symbol}}</div>
+              <div class="suit-center">{{card.symbol}}</div>
+              <div class="rank-bottom">{{card.rank}}</div>
+              <div class="suit-bottom">{{card.symbol}}</div>
+            </div>
             {{/each}}
           </div>
           {{/if}}

@@ -57,46 +57,68 @@
         font-weight: 600;
         margin-left: 6px;
       }
-      .cards-row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-      .cards-row .card { width: 60px; height: 88px; }
-      .cards-row .card .card-rank { font-size: 24px; }
-      .cards-row .card .card-suit { font-size: 20px; }
-      .cards-row .card.back { width: 60px; height: 88px; }
-      .cards-row .card.back .inner { font-size: 22px; }
-      .card {
-        width: 48px;
-        height: 70px;
-        background: linear-gradient(180deg, #fff 0%, #f0f0f0 100%);
-        border-radius: 6px;
+      .cards-row {
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
-        flex-shrink: 0;
-        font-family: "Georgia", "Times New Roman", serif;
+        gap: 8px;
+        flex-wrap: wrap;
       }
-      .card.red { color: #c62828; }
+      .card {
+        width: 60px;
+        height: 88px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        position: relative;
+        font-family: "Georgia", "Times New Roman", serif;
+        flex-shrink: 0;
+      }
+      .card.red { color: #d32f2f; }
       .card.black { color: #1a1a1a; }
-      .card .card-rank {
-        font-size: 20px;
+      .card .rank-top {
+        position: absolute;
+        top: 4px;
+        left: 6px;
+        font-size: 14px;
         font-weight: 700;
         line-height: 1;
       }
-      .card .card-suit {
-        font-size: 16px;
+      .card .suit-top {
+        position: absolute;
+        top: 19px;
+        left: 6px;
+        font-size: 11px;
         line-height: 1;
-        margin-top: 2px;
+      }
+      .card .suit-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+      }
+      .card .rank-bottom {
+        position: absolute;
+        bottom: 4px;
+        right: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1;
+        transform: rotate(180deg);
+      }
+      .card .suit-bottom {
+        position: absolute;
+        bottom: 19px;
+        right: 6px;
+        font-size: 11px;
+        line-height: 1;
+        transform: rotate(180deg);
       }
       .card.back {
-        position: relative;
-        width: 48px;
-        height: 70px;
         background: #2c5282;
         background-image:
           repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px),
           repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255,255,255,0.05) 3px, rgba(255,255,255,0.05) 6px);
-        border-radius: 8px;
         border: 3px solid #fff;
       }
       .card.back .inner {
@@ -158,7 +180,19 @@
       .player-hand-name.win { background: rgba(39,174,96,0.3); color: #2ecc71; }
       .player-hand-name.lose { background: rgba(231,76,60,0.3); color: #e74c3c; }
       .player-hand-name.push { background: rgba(127,140,141,0.3); color: #bdc3c7; }
-      .player-cards { display: flex; gap: 4px; }
+      .player-cards {
+        display: flex;
+        gap: 4px;
+      }
+      .player-cards .card {
+        width: 46px;
+        height: 68px;
+      }
+      .player-cards .card .rank-top { font-size: 11px; top: 3px; left: 4px; }
+      .player-cards .card .suit-top { font-size: 9px; top: 15px; left: 4px; }
+      .player-cards .card .suit-center { font-size: 16px; }
+      .player-cards .card .rank-bottom { font-size: 11px; bottom: 3px; right: 4px; }
+      .player-cards .card .suit-bottom { font-size: 9px; bottom: 15px; right: 4px; }
       .chat {
         padding: 12px 18px;
         background: rgba(0,0,0,0.15);
@@ -242,7 +276,13 @@
             {{if c.hidden}}
             <div class="card back"><div class="inner">🂠</div></div>
             {{else}}
-            <div class="card {{c.color}}"><span class="card-rank">{{c.rank}}</span><span class="card-suit">{{c.symbol}}</span></div>
+            <div class="card {{c.color}}">
+              <div class="rank-top">{{c.rank}}</div>
+              <div class="suit-top">{{c.symbol}}</div>
+              <div class="suit-center">{{c.symbol}}</div>
+              <div class="rank-bottom">{{c.rank}}</div>
+              <div class="suit-bottom">{{c.symbol}}</div>
+            </div>
             {{/if}}
           {{/each}}
         </div>
@@ -264,7 +304,13 @@
           {{if p.cards.length}}
           <div class="player-cards">
             {{each p.cards card}}
-            <div class="card {{card.color}}"><span class="card-rank">{{card.rank}}</span><span class="card-suit">{{card.symbol}}</span></div>
+            <div class="card {{card.color}}">
+              <div class="rank-top">{{card.rank}}</div>
+              <div class="suit-top">{{card.symbol}}</div>
+              <div class="suit-center">{{card.symbol}}</div>
+              <div class="rank-bottom">{{card.rank}}</div>
+              <div class="suit-bottom">{{card.symbol}}</div>
+            </div>
             {{/each}}
           </div>
           {{/if}}
