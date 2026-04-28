@@ -65,7 +65,7 @@ export class Douniu extends plugin {
     const game = Game.getGame(e.group_id)
     if (!game) return false
     if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #斗牛再来一局', true)
-    const m = e.msg.match(/\d+/)
+    const m = e.msg.match(/\d+$/)
     const amount = m ? Number(m[0]) : 0
     if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #斗牛下注 50', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), amount)

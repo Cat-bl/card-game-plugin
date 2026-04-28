@@ -68,7 +68,7 @@ export class Blackjack extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game || game.state !== Game.STATE.BETTING) return false
-    const m = e.msg.match(/\d+/)
+    const m = e.msg.match(/\d+$/)
     const amount = m ? Number(m[0]) : 0
     if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #21下注 50', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), amount)
