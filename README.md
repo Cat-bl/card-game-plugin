@@ -10,10 +10,6 @@
 git clone --depth=1 https://github.com/Cat-bl/card-game-plugin plugins/card-game-plugin
 ```
 
-```bash
-pnpm install  # 确保 puppeteer 依赖已安装
-```
-
 ## 游戏一览
 
 | 游戏 | 发起命令 | 牌数 | 玩法 |
