@@ -23,6 +23,14 @@ git clone --depth=1 https://github.com/Cat-bl/card-game-plugin plugins/card-game
 
 三个游戏独立管理，同一群可存在不同类型的游戏。
 
+### 通用指令
+
+| 指令 | 说明 |
+|------|------|
+| `#卡牌帮助` | 查看卡牌游戏总览和快速开始 |
+| `#卡牌更新` / `#卡牌强制更新` | 更新插件（主人） |
+| `#再来一局` | 结算后继续下一轮（所有游戏通用） |
+
 ## 21 点（Blackjack）
 
 ### 流程
@@ -46,6 +54,7 @@ git clone --depth=1 https://github.com/Cat-bl/card-game-plugin plugins/card-game
 | `#双倍` | 双倍下注并只再要一张牌 |
 | `#保险` | 庄家明牌为 A 时可买保险 |
 | `#21点状态` | 查看游戏状态 |
+| `#21点帮助` | 查看详细规则 |
 | `#21点结束` | 强制结束（发起人/主人） |
 | `#再来一局` | 结算后继续下一轮 |
 
@@ -78,6 +87,7 @@ git clone --depth=1 https://github.com/Cat-bl/card-game-plugin plugins/card-game
 | `#下注 N` | 下注 N 筹码（10~500） |
 | `#默认下注` | 使用默认赌注（50） |
 | `#斗牛状态` | 查看游戏状态 |
+| `#斗牛帮助` | 查看详细规则 |
 | `#斗牛结束` | 强制结束（发起人/主人） |
 | `#再来一局` | 结算后继续下一轮 |
 
@@ -125,6 +135,7 @@ git clone --depth=1 https://github.com/Cat-bl/card-game-plugin plugins/card-game
 | `#弃牌` | 放弃本局 |
 | `#比牌 @某人` | 与指定玩家比牌，输者出局 |
 | `#炸金花状态` | 查看游戏状态 |
+| `#炸金花帮助` | 查看详细规则 |
 | `#炸金花结束` | 强制结束（发起人/主人） |
 | `#再来一局` | 结算后继续下一轮 |
 
@@ -195,15 +206,17 @@ card-game-plugin/
     config.js           # YAML 配置 + 热更新
     deck.js             # 共享牌组工具
     render.js           # puppeteer 截图适配
-  apps/                 # 命令处理（每个游戏一个文件）
-    blackjack.js
-    douniu.js
-    zhajinhua.js
+  apps/                 # 命令处理
+    blackjack.js        # 21点
+    douniu.js           # 斗牛
+    zhajinhua.js        # 炸金花
+    update.js           # 卡牌更新 + 卡牌帮助
   games/                # 游戏引擎（每个游戏一个目录）
     blackjack/  engine.js, render.js
     douniu/     engine.js, render.js
     zhajinhua/  engine.js, render.js
   resources/html/       # HTML 模板
+    help.html           # 插件总览帮助
     blackjack/  chat.html, help.html
     douniu/     chat.html, help.html
     zhajinhua/  chat.html, help.html
