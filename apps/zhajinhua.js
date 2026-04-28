@@ -23,7 +23,7 @@ export class Zhajinhua extends plugin {
         { reg: /^#?炸?金花结束$/, fnc: 'end' },
         { reg: /^#?炸?金花状态$/, fnc: 'status' },
         { reg: /^#?炸?金花帮助$/, fnc: 'help' },
-        { reg: /^#?再来一局$/, fnc: 'newRound' },
+        { reg: /^#?炸金花再来一局$/, fnc: 'newRound' },
       ],
     })
   }

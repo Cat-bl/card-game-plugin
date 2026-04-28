@@ -15,16 +15,16 @@ export class Blackjack extends plugin {
         { reg: /^#?加入21点$/, fnc: 'join' },
         { reg: /^#?退出21点$/, fnc: 'quit' },
         { reg: /^#?开始21点$/, fnc: 'start' },
-        { reg: /^#?下注\s*\d+$/, fnc: 'bet' },
-        { reg: /^#?默认下注$/, fnc: 'defaultBet' },
-        { reg: /^#?叫牌$/, fnc: 'hit' },
-        { reg: /^#?停牌$/, fnc: 'stand' },
-        { reg: /^#?双倍$/, fnc: 'doubleDown' },
-        { reg: /^#?保险$/, fnc: 'insurance' },
+        { reg: /^#?21下注\s*\d+$/, fnc: 'bet' },
+        { reg: /^#?21默认下注$/, fnc: 'defaultBet' },
+        { reg: /^#?21叫牌$/, fnc: 'hit' },
+        { reg: /^#?21停牌$/, fnc: 'stand' },
+        { reg: /^#?21双倍$/, fnc: 'doubleDown' },
+        { reg: /^#?21保险$/, fnc: 'insurance' },
         { reg: /^#?21点结束$/, fnc: 'end' },
         { reg: /^#?21点状态$/, fnc: 'status' },
         { reg: /^#?21点帮助$/, fnc: 'help' },
-        { reg: /^#?再来一局$/, fnc: 'newRound' },
+        { reg: /^#?21再来一局$/, fnc: 'newRound' },
       ],
     })
   }
@@ -70,7 +70,7 @@ export class Blackjack extends plugin {
     if (!game || game.state !== Game.STATE.BETTING) return false
     const m = e.msg.match(/\d+/)
     const amount = m ? Number(m[0]) : 0
-    if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #下注 50', true)
+    if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #21下注 50', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), amount)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -91,13 +91,6 @@ export class Blackjack extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game) return false
-    const thinkingMsg = await e.reply('正在摸牌...', true)
-    setTimeout(async () => {
-      try {
-        const g = Bot.pickGroup?.(e.group_id)
-        if (g && thinkingMsg?.message_id) await g.recallMsg(thinkingMsg.message_id)
-      } catch {}
-    }, 15000)
     const r = Game.hit(e.group_id, String(e.user_id))
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)

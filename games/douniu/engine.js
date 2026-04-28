@@ -178,6 +178,7 @@ function onBetTimeout(game) {
     }
   }
   startDealing(game)
+  notify(game, 'bet-timeout')
 }
 
 // ======== CRUD ========
@@ -274,7 +275,7 @@ export function startBetting(groupId, operatorId) {
   game.messages = []
   game.messages.push({
     type: 'system',
-    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #下注 <金额> 或 #默认下注`,
+    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #斗牛下注 <金额> 或 #斗牛默认下注`,
   })
   scheduleBetTimeout(game)
   return { ok: true, game }
@@ -382,7 +383,7 @@ function settle(game) {
 
   game.state = STATE.ENDED
   scheduleEndedCleanup(game)
-  game.messages.push({ type: 'system', content: '本轮结束，发送 #再来一局 继续游戏' })
+  game.messages.push({ type: 'system', content: '本轮结束，发送 #斗牛再来一局 继续游戏' })
   return { ok: true, game }
 }
 
@@ -407,7 +408,7 @@ export function newRound(groupId) {
   game.messages = []
   game.messages.push({
     type: 'system',
-    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #下注 <金额> 或 #默认下注`,
+    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #斗牛下注 <金额> 或 #斗牛默认下注`,
   })
   scheduleBetTimeout(game)
   return { ok: true, game }

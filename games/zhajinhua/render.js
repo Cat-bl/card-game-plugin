@@ -95,7 +95,7 @@ function buildStatusText(game) {
     }
   }
   if (game.state === STATE.ENDED) {
-    return '发送 #再来一局 继续游戏'
+    return '发送 #炸金花再来一局 继续游戏'
   }
   return ''
 }

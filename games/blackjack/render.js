@@ -1,6 +1,6 @@
 import Config from '../../model/config.js'
 import { screenshot } from '../../model/render.js'
-import { STATE, handValue, isBlackjack, SUIT_SYMBOL, SUIT_COLOR } from './engine.js'
+import { STATE, handValue, isBlackjack, formatCard } from './engine.js'
 
 export async function renderGame(game) {
   const data = buildRenderData(game)
@@ -17,12 +17,7 @@ function buildRenderData(game) {
     avatar: p.avatar,
     chips: p.chips,
     currentBet: p.currentBet,
-    cards: p.hand.map(c => ({
-      suit: c.suit,
-      rank: c.rank,
-      symbol: SUIT_SYMBOL[c.suit],
-      color: SUIT_COLOR[c.suit],
-    })),
+    cards: p.hand.map(formatCard),
     handValue: handValue(p.hand),
     isBlackjack: isBlackjack(p.hand),
     isBust: p.status === 'bust' || p.status === 'lose',
@@ -43,12 +38,7 @@ function buildRenderData(game) {
     if (game.state === STATE.PLAYING && i === 1) {
       return { hidden: true }
     }
-    return {
-      suit: c.suit,
-      rank: c.rank,
-      symbol: SUIT_SYMBOL[c.suit],
-      color: SUIT_COLOR[c.suit],
-    }
+    return formatCard(c)
   })
   const dealerRevealed = game.state === STATE.DEALER || game.state === STATE.ENDED
   const dealerValue = game.dealer.hand.length
@@ -112,15 +102,15 @@ function buildStatusText(game) {
   if (game.state === STATE.PLAYING) {
     const current = game.players[game.currentPlayerIdx]
     if (current && current.status === 'playing') {
-      return `轮到 ${current.nickname} 操作 · 发送 #叫牌 #停牌 #双倍`
+      return `轮到 ${current.nickname} 操作 · #21叫牌 #21停牌 #21双倍`
     }
     return '等待操作...'
   }
   if (game.state === STATE.DEALER) {
-    return '庄家正在摸牌...'
+    return '庄家回合中...'
   }
   if (game.state === STATE.ENDED) {
-    return '发送 #再来一局 继续游戏'
+    return '发送 #21再来一局 继续游戏'
   }
   return ''
 }

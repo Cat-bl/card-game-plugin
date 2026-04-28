@@ -97,6 +97,7 @@ function onTurnTimeout(game) {
   game.messages.push({ type: 'system', content: `${player.nickname} 操作超时，自动停牌` })
   forceStand(game, player)
   moveToNextPlayer(game)
+  notify(game, 'turn-timeout')
 }
 
 // ======== CRUD ========
@@ -199,7 +200,7 @@ export function startBetting(groupId, operatorId) {
   game.messages = []
   game.messages.push({
     type: 'system',
-    content: `第 ${game.round} 轮下注开始，请玩家发送 #下注 <金额>（${game.config.minBet}~${game.config.maxBet}），或发送 #默认下注 使用默认 ${game.config.defaultBet} 筹码`,
+    content: `第 ${game.round} 轮下注开始，请玩家发送 #21下注 <金额>（${game.config.minBet}~${game.config.maxBet}），或发送 #21默认下注 使用默认 ${game.config.defaultBet} 筹码`,
   })
   return { ok: true, game }
 }
@@ -431,7 +432,7 @@ function startDealerTurn(game) {
   }
 
   settle(game)
-  return game
+  return { ok: true, game }
 }
 
 // ======== Settlement ========
@@ -506,7 +507,7 @@ function settle(game) {
 
   game.state = STATE.ENDED
   scheduleEndedCleanup(game)
-  game.messages.push({ type: 'system', content: '本轮结束，发送 #再来一局 继续游戏' })
+  game.messages.push({ type: 'system', content: '本轮结束，发送 #21再来一局 继续游戏' })
 }
 
 export function newRound(groupId) {
@@ -532,7 +533,7 @@ export function newRound(groupId) {
   game.messages = []
   game.messages.push({
     type: 'system',
-    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #下注 <金额> 或 #默认下注`,
+    content: `第 ${game.round} 轮下注开始（${game.config.minBet}~${game.config.maxBet}），发送 #21下注 <金额> 或 #21默认下注`,
   })
   return { ok: true, game }
 }

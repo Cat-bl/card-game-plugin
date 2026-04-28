@@ -175,6 +175,7 @@ function onTurnTimeout(game) {
   if (!current) return
   game.messages.push({ type: 'system', content: `${current.nickname} 操作超时，自动弃牌` })
   doFold(game, current)
+  notify(game, 'turn-timeout')
 }
 
 // ======== CRUD ========
@@ -574,7 +575,7 @@ function showdown(game) {
 
   game.state = STATE.ENDED
   scheduleEndedCleanup(game)
-  game.messages.push({ type: 'system', content: '本轮结束，发送 #再来一局 继续游戏' })
+  game.messages.push({ type: 'system', content: '本轮结束，发送 #炸金花再来一局 继续游戏' })
   return { ok: true, game }
 }
 

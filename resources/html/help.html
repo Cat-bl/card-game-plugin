@@ -40,9 +40,39 @@
         border: 1px solid rgba(255,255,255,0.08);
       }
       .game-card .icon {
-        font-size: 36px;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
+        display: block;
+        height: 80px;
+        position: relative;
+        width: 120px;
+        margin-left: auto;
+        margin-right: auto;
       }
+      .card-mini {
+        width: 48px;
+        height: 68px;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+        position: absolute;
+        top: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Georgia", "Times New Roman", serif;
+      }
+      .card-mini.red { color: #d32f2f; }
+      .card-mini.black { color: #1a1a1a; }
+      .card-mini .r { font-size: 22px; font-weight: 700; line-height: 1; }
+      .card-mini .s { font-size: 18px; line-height: 1; margin-top: -2px; }
+      /* 2-card layout: 21点 */
+      .card-mini.c1 { left: 16px; transform: rotate(-8deg); z-index: 1; }
+      .card-mini.c2 { left: 54px; transform: rotate(6deg); z-index: 2; }
+      /* 3-card layout: 斗牛 / 炸金花 */
+      .card-mini.c3 { left: 6px; transform: rotate(-10deg); z-index: 1; }
+      .card-mini.c4 { left: 40px; transform: rotate(0deg); z-index: 3; }
+      .card-mini.c5 { left: 74px; transform: rotate(10deg); z-index: 2; }
       .game-card h3 {
         font-size: 18px;
         color: #f5d742;
@@ -122,21 +152,32 @@
 
       <div class="games">
         <div class="game-card">
-          <div class="icon">🂡</div>
+          <div class="icon">
+            <div class="card-mini red c1"><span class="r">A</span><span class="s">♥</span></div>
+            <div class="card-mini black c2"><span class="r">K</span><span class="s">♠</span></div>
+          </div>
           <h3>21 点</h3>
           <div class="en">Blackjack</div>
           <div class="desc">与庄家对局，尽可能接近<br>21 点而不超过</div>
           <div class="cmd">#21点帮助</div>
         </div>
         <div class="game-card">
-          <div class="icon">🃅</div>
+          <div class="icon">
+            <div class="card-mini black c3"><span class="r">8</span><span class="s">♠</span></div>
+            <div class="card-mini red c4"><span class="r">3</span><span class="s">♥</span></div>
+            <div class="card-mini black c5"><span class="r">9</span><span class="s">♣</span></div>
+          </div>
           <h3>斗牛</h3>
           <div class="en">Dou Niu</div>
           <div class="desc">5 张牌凑牛，<br>与庄家比牌型大小</div>
           <div class="cmd">#斗牛帮助</div>
         </div>
         <div class="game-card">
-          <div class="icon">🃏</div>
+          <div class="icon">
+            <div class="card-mini black c3"><span class="r">A</span><span class="s">♠</span></div>
+            <div class="card-mini black c4"><span class="r">A</span><span class="s">♣</span></div>
+            <div class="card-mini black c5"><span class="r">A</span><span class="s">♦</span></div>
+          </div>
           <h3>炸金花</h3>
           <div class="en">Zha Jinhua</div>
           <div class="desc">3 张牌玩家互比，<br>盲注明注心理博弈</div>
@@ -168,8 +209,8 @@
             <code>#卡牌更新</code> 更新插件（主人）
           </div>
           <div>
-            <code>#再来一局</code> 结算后继续下一轮<br>
-            <code>#默认下注</code> 使用默认下注额
+            <code>#21再来一局</code> / <code>#斗牛再来一局</code> / <code>#炸金花再来一局</code><br>
+            <code>#21默认下注</code> / <code>#斗牛默认下注</code>
           </div>
         </div>
       </div>

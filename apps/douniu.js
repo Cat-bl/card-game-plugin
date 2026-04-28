@@ -15,12 +15,12 @@ export class Douniu extends plugin {
         { reg: /^#?加入斗牛$/, fnc: 'join' },
         { reg: /^#?退出斗牛$/, fnc: 'quit' },
         { reg: /^#?开始斗牛$/, fnc: 'start' },
-        { reg: /^#?下注\s*\d+$/, fnc: 'bet' },
-        { reg: /^#?默认下注$/, fnc: 'defaultBet' },
+        { reg: /^#?斗牛下注\s*\d+$/, fnc: 'bet' },
+        { reg: /^#?斗牛默认下注$/, fnc: 'defaultBet' },
         { reg: /^#?斗牛结束$/, fnc: 'end' },
         { reg: /^#?斗牛状态$/, fnc: 'status' },
         { reg: /^#?斗牛帮助$/, fnc: 'help' },
-        { reg: /^#?再来一局$/, fnc: 'newRound' },
+        { reg: /^#?斗牛再来一局$/, fnc: 'newRound' },
       ],
     })
   }
@@ -64,10 +64,10 @@ export class Douniu extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game) return false
-    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #再来一局', true)
+    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #斗牛再来一局', true)
     const m = e.msg.match(/\d+/)
     const amount = m ? Number(m[0]) : 0
-    if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #下注 50', true)
+    if (!amount || amount <= 0) return e.reply('请输入有效下注金额，例如 #斗牛下注 50', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), amount)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)
@@ -78,7 +78,7 @@ export class Douniu extends plugin {
     if (!e.isGroup) return false
     const game = Game.getGame(e.group_id)
     if (!game) return false
-    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #再来一局', true)
+    if (game.state === Game.STATE.ENDED) return e.reply('本轮已结束，请发送 #斗牛再来一局', true)
     const r = Game.placeBet(e.group_id, String(e.user_id), game.config.defaultBet)
     if (r.error) return e.reply(r.error, true)
     await this.render(e, r.game)

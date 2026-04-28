@@ -87,7 +87,7 @@ function buildStatusText(game) {
     return '全员已下注，即将发牌...'
   }
   if (game.state === STATE.ENDED) {
-    return '发送 #再来一局 继续游戏'
+    return '发送 #斗牛再来一局 继续游戏'
   }
   return ''
 }
